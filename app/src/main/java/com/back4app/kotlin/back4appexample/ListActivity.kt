@@ -4,12 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.NavHostFragment
+//import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -17,22 +22,33 @@ import com.parse.ParseUser
 import java.util.*
 
 class ListActivity : AppCompatActivity() {
-    var dataList = ArrayList<String>()
-    var myArray = arrayOf<String>()
+
+    //val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
+    lateinit var navHost: NavHostFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
+        navHost=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        /*
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
             val intent = Intent(this, CreateObjectActivity::class.java)
             startActivity(intent)
         }
 
-        findObjects()
+         */
+        //findObjects()
     }
 
-    private fun findObjects() {
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navHost.navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    /*private fun findObjects() {
         myArray = arrayOf()
         val listView = findViewById<View>(R.id.listviewA) as ListView
 
@@ -134,5 +150,5 @@ class ListActivity : AppCompatActivity() {
                 ).show()
             }
         }
-    }
+    }*/
 }

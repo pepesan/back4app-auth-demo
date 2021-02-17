@@ -35,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
             internal_layout?.visibility= View.GONE
             progress_bar?.visibility=View.VISIBLE
             if(validateUser()) {
-                val user = ParseUser();
+                val user = ParseUser()
                 // Set the user's username and password, which can be obtained by a forms
                 user.username = username?.text.toString();
                 user.setPassword(password?.text.toString());
