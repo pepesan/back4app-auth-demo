@@ -22,14 +22,13 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-        /*
+
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
             val intent = Intent(this, CreateObjectActivity::class.java)
             startActivity(intent)
         }
 
-         */
         findObjects()
     }
 
