@@ -21,7 +21,7 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: Acti
         }
 
         fun setItem(data:Data){
-            name.text=data.value
+            name.text=data.itemName
         }
 
     }

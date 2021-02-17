@@ -3,10 +3,12 @@ package com.back4app.kotlin.back4appexample
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -19,6 +21,7 @@ class ListFragment : Fragment() {
     val dataList:MutableList<Data> = mutableListOf()
     lateinit var dataAdapter:DataAdapter
     lateinit var dataRecyclerView:RecyclerView
+    private val dataViewModel: DataViewModel = DataViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +35,9 @@ class ListFragment : Fragment() {
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.list_rvData)
         val tvNoData=rootView.findViewById<TextView>(R.id.list_tvNoData)
 
-        val dataList=(activity as ListActivity).dataViewModel.dataLiveList
-        dataList.observe(activity as ListActivity, Observer { Data ->
+        //val dataList=(activity as ListActivity).dataViewModel.dataLiveList
+        dataViewModel.itemList.observe(activity as ListActivity, Observer { Data ->
+            Log.d("app", "data: "+ Data)
             // Update the cached copy of the words in the adapter.
             Data?.let { allData=it }
             if(allData.size==0){
@@ -48,6 +52,7 @@ class ListFragment : Fragment() {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
             }
         })
+        dataViewModel.getAll()
 
         return rootView
     }

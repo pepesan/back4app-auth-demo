@@ -13,10 +13,11 @@ import java.util.*
 
 class DataViewModel(): ViewModel() {
 
-    val dataLiveList:LiveData<MutableList<Data>>
+    val itemList: MutableLiveData<MutableList<Data>> by lazy {
+        MutableLiveData()
+    }
 
-    init {
-
+    fun getAll(){
         var dataList:MutableList<Data> = mutableListOf()
         // Configure Query
         val query = ParseQuery.getQuery<ParseObject>("reminderList")
@@ -26,12 +27,18 @@ class DataViewModel(): ViewModel() {
         query.findInBackground { objects, e ->
             if (e == null) {
                 // Adding objects into the Array
+
                 for (i in objects.indices) {
-                    objects[i].getString("itemName")?.let {dataLiveList.add(Data(it))}
+                    objects[i].getString("itemName")?.let {dataList.add(Data(it))}
                 }
+                itemList.setValue(dataList)
             }
         }
         Log.d("app","dataList: "+ dataList)
+    }
+    init {
+
+
     }
 }
 
