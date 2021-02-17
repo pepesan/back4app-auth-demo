@@ -68,6 +68,8 @@ class LoginActivity : AppCompatActivity() {
                 if (parseException != null) {
                     Toast.makeText(this, parseException.message, Toast.LENGTH_LONG).show()
                 }
+                progress_bar?.visibility=View.GONE
+                internal_layout?.visibility=View.VISIBLE
             }
         }
     }

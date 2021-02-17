@@ -1,6 +1,7 @@
 package com.back4app.kotlin.back4appexample
 
 import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: Acti
     }
 
     override fun getItemCount(): Int {
+        Log.d("app", "DataAdapter Size: "+ allData.size)
         return allData.size
     }
 }

@@ -3,8 +3,8 @@
 
 
     <string name="back4app_server_url" translatable="false">https://parseapi.back4app.com/</string>
-    <string name="back4app_app_id" translatable="false"></string>
-    <string name="back4app_client_key" translatable="false"></string>
+    <string name="back4app_app_id" translatable="false">NLP7zvCSn93oMVtXonkSK3yCjJdMmLG1q5NKtfc6</string>
+    <string name="back4app_client_key" translatable="false">Z0YqthdlMOVYNl5Wv95OouFz73JviFSljQW3ZUYX</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_hay_datos">No hay datos</string>
