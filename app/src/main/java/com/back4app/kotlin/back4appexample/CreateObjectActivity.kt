@@ -21,7 +21,8 @@ class CreateObject : AppCompatActivity() {
     private var formatterDate: Date? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_object)
+        setContentView(R.layout.activity_list_item)
+        /*
         itemName = findViewById<View>(R.id.edtItem) as EditText
         itemAdd = findViewById<View>(R.id.edtAdditionalInformation) as EditText
         itemDate = findViewById<View>(R.id.calendarView) as CalendarView
@@ -32,7 +33,7 @@ class CreateObject : AppCompatActivity() {
             val getDate = (dayOfMonth.toString() + "/" + (month + 1) + "/" + year)
             formatterDate = convertStringToData(getDate)
         }
-        create_button.setOnClickListener(View.OnClickListener { //Validating the log in data
+        create_button?.setOnClickListener(View.OnClickListener { //Validating the log in data
             var validationError = false
             val validationErrorMessage = StringBuilder("Please, ")
             if (isEmptyText(itemName)) {
@@ -58,6 +59,8 @@ class CreateObject : AppCompatActivity() {
                 saveObject()
             }
         })
+
+         */
     }
 
     private fun isEmptyText(text: EditText?): Boolean {
@@ -89,7 +92,7 @@ class CreateObject : AppCompatActivity() {
         // Saving object
         reminderList.saveInBackground { e ->
             if (e == null) {
-                val intent = Intent(this@CreateObject, ReadObjects::class.java)
+                val intent = Intent(this@CreateObject, ListActivity::class.java)
                 startActivity(intent)
             } else {
                 Toast.makeText(
