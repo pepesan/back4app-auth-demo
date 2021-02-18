@@ -1,15 +1,12 @@
 package com.back4app.kotlin.back4appexample
 
-import android.R
 import android.util.Log
-import android.widget.ArrayAdapter
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.parse.ParseObject
 import com.parse.ParseQuery
-import java.util.*
+
 
 class DataViewModel(): ViewModel() {
 
@@ -35,10 +32,6 @@ class DataViewModel(): ViewModel() {
             }
         }
         Log.d("app","dataList: "+ dataList)
-    }
-    init {
-
-
     }
 }
 
