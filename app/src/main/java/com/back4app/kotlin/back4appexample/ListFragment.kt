@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +21,7 @@ class ListFragment : Fragment() {
     val dataList:MutableList<Data> = mutableListOf()
     var dataAdapter: DataAdapter? = null
     var dataRecyclerView: RecyclerView? = null
-    private val dataViewModel: DataViewModel = DataViewModel()
+    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +69,7 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val fab = view?.findViewById<View>(R.id.fab) as FloatingActionButton
+        val fab = view.findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
             (activity as ListActivity).navHost.navController.navigate(R.id.action_listFragment_to_addFragment)
         }

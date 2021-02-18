@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
         progress_bar = findViewById(R.id.progress_bar)
         internal_layout= findViewById(R.id.internal_layout)
         username = findViewById(R.id.username)
+        username?.requestFocus()
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
         navigatesignup = findViewById(R.id.navigatesignup)

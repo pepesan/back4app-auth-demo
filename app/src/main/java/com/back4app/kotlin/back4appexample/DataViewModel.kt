@@ -1,6 +1,7 @@
 package com.back4app.kotlin.back4appexample
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -29,12 +30,51 @@ class DataViewModel(): ViewModel() {
                 // Adding objects into the Array
 
                 for (i in objects.indices) {
-                    objects[i].getString("itemName")?.let {dataList.add(Data(it))}
+                    val data: Data = Data()
+                    data.objectId= objects[i].getString("objectId")
+                    data.itemName= objects[i].getString("itemName")
+                    dataList.add(data)
                 }
                 itemList.setValue(dataList)
             }
         }
         Log.d("app","dataList: "+ dataList)
+    }
+
+    fun insert(data: Data){
+        // Configure Query
+        // Configure Query
+        val reminderList = ParseObject("reminderList")
+
+        // Store an object
+
+        // Store an object
+        reminderList.put("itemName", data.itemName!!)
+        reminderList.put("additionalInformation", data.additionalInformation!!)
+        reminderList.put("dateCommitment", data.dateCommitment!!)
+        reminderList.put("isAvailable",data.isAvailable!!)
+        //reminderList.put("userId", ParseUser.getCurrentUser())
+        // Saving object
+        reminderList.saveInBackground {
+            if (it == null) {
+                //vuelve
+                Log.d("app", "reminderList: ${reminderList.objectId}")
+                data.objectId= reminderList.objectId
+                item.setValue(data)
+            } else {
+                Log.d("app",  it.message.toString())
+            }
+
+        }
+    }
+    fun getById(id: String){
+
+    }
+    fun update(data: Data){
+
+    }
+    fun deleteById(id: String){
+
     }
 }
 

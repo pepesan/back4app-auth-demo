@@ -21,6 +21,7 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: List
         }
 
         fun setItem(data:Data){
+            Log.d("app", "Data: $data")
             name.text=data.itemName
         }
 

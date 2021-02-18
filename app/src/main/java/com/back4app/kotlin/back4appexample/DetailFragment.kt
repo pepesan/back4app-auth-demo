@@ -5,11 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 
 
 class DetailFragment : Fragment() {
 
-
+    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
 
 
     override fun onCreateView(

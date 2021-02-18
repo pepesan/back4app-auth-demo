@@ -3,14 +3,14 @@ package com.back4app.kotlin.back4appexample
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.CalendarView
+import android.widget.*
 import android.widget.CalendarView.OnDateChangeListener
-import android.widget.EditText
-import android.widget.Switch
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.parse.ParseObject
 import com.parse.ParseUser
 import java.text.ParseException
@@ -19,12 +19,14 @@ import java.util.*
 
 
 class AddFragment : Fragment() {
+    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
 
     private var itemName: EditText? = null
     private var itemAdd: EditText? = null
     private var itemDate: CalendarView? = null
     private var isAvailable: Switch? = null
     private var formatterDate: Date? = null
+    private var picker_button: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,10 +49,34 @@ class AddFragment : Fragment() {
         itemAdd = view.findViewById(R.id.edtAdditionalInformation);
         itemDate = view.findViewById(R.id.calendarView);
         isAvailable = view.findViewById(R.id.swiAvailable);
+        picker_button = view.findViewById(R.id.dpText)
+        picker_button?.setOnClickListener {
+            // Create the date picker builder and set the title
+            val builder = MaterialDatePicker.Builder.datePicker()
+
+            // create the date picker
+            val datePicker = builder.build()
+
+            // set listener when date is selected
+            datePicker.addOnPositiveButtonClickListener {
+
+                // Create calendar object and set the date to be that returned from selection
+                val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                calendar.time = Date(it)
+                picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+                formatterDate =  convertStringToData(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
+                picker_button?.text= formatterDate.toString()
+            }
+
+            datePicker.show(getParentFragmentManager(), "MyTAG")
+        }
+        /*
         itemDate?.setOnDateChangeListener(OnDateChangeListener { calendarView, year, month, dayOfMonth ->
             val getDate = dayOfMonth.toString() + "/" + (month + 1) + "/" + year
             formatterDate = convertStringToData(getDate)
         })
+         */
     }
     override fun onPrepareOptionsMenu(menu: Menu){
         super.onPrepareOptionsMenu(menu)
@@ -100,43 +126,16 @@ class AddFragment : Fragment() {
     }
 
     private fun saveObject() {
-        // Configure Query
-        // Configure Query
-        val reminderList = ParseObject("reminderList")
-
-        // Store an object
-
-        // Store an object
-        reminderList.put("itemName", itemName!!.text.toString())
-        reminderList.put("additionalInformation", itemAdd!!.text.toString())
-        reminderList.put("dateCommitment", formatterDate!!)
-        reminderList.put("isAvailable", isAvailable!!.isChecked)
-        //reminderList.put("userId", ParseUser.getCurrentUser())
-
-        // Saving object
-
-        // Saving object
-        reminderList.saveInBackground {
-            if (it == null) {
-                //vuelve
-                Log.d("app", "reminderList: ${reminderList.objectId}")
-                (activity as ListActivity).navHost.navController.navigate(R.id.action_addFragment_to_listFragment)
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    it.message.toString(),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-        }
+        val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
+        dataViewModel.insert(data)
+        (activity as ListActivity).navHost.navController.navigate(R.id.action_addFragment_to_listFragment)
     }
 
     fun convertStringToData(getDate: String?): Date? {
         var today: Date? = null
         val simpleDate = SimpleDateFormat("dd/MM/yyyy")
         try {
-            today = simpleDate.parse(getDate)
+            today = simpleDate.parse(getDate!!)
         } catch (e: ParseException) {
             e.printStackTrace()
         }
