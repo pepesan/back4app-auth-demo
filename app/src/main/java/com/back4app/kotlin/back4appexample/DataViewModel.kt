@@ -13,6 +13,9 @@ class DataViewModel(): ViewModel() {
     val itemList: MutableLiveData<MutableList<Data>> by lazy {
         MutableLiveData()
     }
+    val item: MutableLiveData<Data> by lazy {
+        MutableLiveData()
+    }
 
     fun getAll(){
         var dataList:MutableList<Data> = mutableListOf()

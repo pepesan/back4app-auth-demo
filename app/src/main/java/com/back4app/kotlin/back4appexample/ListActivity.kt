@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.NavHostFragment
@@ -23,7 +24,7 @@ import java.util.*
 
 class ListActivity : AppCompatActivity() {
 
-    //val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
+    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
     lateinit var navHost: NavHostFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
