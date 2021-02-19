@@ -1,12 +1,13 @@
 package com.back4app.kotlin.back4appexample
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.parse.GetCallback
 import com.parse.ParseObject
 import com.parse.ParseQuery
+import java.text.ParseException
 
 
 class DataViewModel(): ViewModel() {
@@ -38,37 +39,59 @@ class DataViewModel(): ViewModel() {
                 itemList.setValue(dataList)
             }
         }
-        Log.d("app","dataList: "+ dataList)
+        Log.d("app", "dataList: " + dataList)
     }
 
     fun insert(data: Data){
         // Configure Query
         // Configure Query
-        val reminderList = ParseObject("reminderList")
+        val newItem = ParseObject("reminderList")
 
         // Store an object
 
         // Store an object
-        reminderList.put("itemName", data.itemName!!)
-        reminderList.put("additionalInformation", data.additionalInformation!!)
-        reminderList.put("dateCommitment", data.dateCommitment!!)
-        reminderList.put("isAvailable",data.isAvailable!!)
+        newItem.put("itemName", data.itemName!!)
+        newItem.put("additionalInformation", data.additionalInformation!!)
+        newItem.put("dateCommitment", data.dateCommitment!!)
+        newItem.put("isAvailable", data.isAvailable!!)
         //reminderList.put("userId", ParseUser.getCurrentUser())
         // Saving object
-        reminderList.saveInBackground {
+        newItem.saveInBackground {
             if (it == null) {
                 //vuelve
-                Log.d("app", "reminderList: ${reminderList.objectId}")
-                data.objectId= reminderList.objectId
+                Log.d("app", "reminderList: ${newItem.objectId}")
+                data.objectId= newItem.objectId
                 item.setValue(data)
+                getById(data.objectId!!)
             } else {
-                Log.d("app",  it.message.toString())
+                Log.d("app", it.message.toString())
             }
 
         }
+
     }
     fun getById(id: String){
-
+        //Configure Query
+        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        // Query Parameters
+        query.whereEqualTo("objectId", id);
+        // How we need retrive exactly one result we can use the getFirstInBackground method
+        query.getInBackground(id){ parseObject,parseException ->
+            if (parseException == null) {
+                val data: Data= Data()
+                data.objectId = id
+                data.dateCommitment=parseObject.getDate("dateCommitment")
+                data.additionalInformation=parseObject.getString("additionalInformation")
+                data.itemName=parseObject.getString("itemName")
+                data.isAvailable=parseObject.getBoolean("isAvailable")
+                data.dateCommitment=parseObject.getDate("dateCommitment")
+                data.dateCommitment=parseObject.getDate("dateCommitment")
+                item.setValue(data)
+                Log.d("app", "GetByID $id: $data")
+            } else {
+                Log.d("app", "Get ItemById Error: "+ parseException.message.toString())
+            }
+        }
     }
     fun update(data: Data){
 
