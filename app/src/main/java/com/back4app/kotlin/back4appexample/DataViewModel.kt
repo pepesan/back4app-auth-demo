@@ -62,7 +62,7 @@ class DataViewModel(): ViewModel() {
                 Log.d("app", "reminderList: ${newItem.objectId}")
                 data.objectId= newItem.objectId
                 item.setValue(data)
-                getById(data.objectId!!)
+                //getById(data.objectId!!)
             } else {
                 Log.d("app", it.message.toString())
             }
@@ -76,7 +76,7 @@ class DataViewModel(): ViewModel() {
         // Query Parameters
         query.whereEqualTo("objectId", id);
         // How we need retrive exactly one result we can use the getFirstInBackground method
-        query.getInBackground(id){ parseObject,parseException ->
+        query.getFirstInBackground{ parseObject,parseException ->
             if (parseException == null) {
                 val data: Data= Data()
                 data.objectId = id
@@ -94,7 +94,31 @@ class DataViewModel(): ViewModel() {
         }
     }
     fun update(data: Data){
+        //Configure Query
+        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        // Query Parameters
+        query.whereEqualTo("objectId", data.objectId);
+        // How we need retrive exactly one result we can use the getFirstInBackground method
+        query.getFirstInBackground{ parseObject,parseException ->
+            if (parseException == null) {
 
+                parseObject.put("dateCommitment",data.dateCommitment!!)
+                parseObject.put("additionalInformation",data.additionalInformation!!)
+                parseObject.put("isAvailable",data.isAvailable!!)
+                parseObject.put("itemName",data.itemName!!)
+                parseObject.saveInBackground{
+                    if (it==null){
+                        item.setValue(data)
+                        Log.d("app", "Update By Id ${data.objectId}: $data")
+                    }else{
+                        Log.d("app", "Fail to Update By Id ${data.objectId}: Error: "+ it.message)
+                    }
+                }
+
+            } else {
+                Log.d("app", "Get ItemById Error: "+ parseException.message.toString())
+            }
+        }
     }
     fun deleteById(id: String){
 
