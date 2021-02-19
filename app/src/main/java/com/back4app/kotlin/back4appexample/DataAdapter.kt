@@ -11,18 +11,20 @@ import androidx.recyclerview.widget.RecyclerView
 class DataAdapter(private val allData: MutableList<Data>, val dataActivity: ListActivity):RecyclerView.Adapter<DataAdapter.DataViewHolder>() {
     inner class DataViewHolder(view:View):RecyclerView.ViewHolder(view), View.OnClickListener{
         var name:TextView=view.findViewById(R.id.item_tvName)
+        var objectId:String?=null
         init {
             name.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
-            val bundle= bundleOf("name" to this.name.text.toString())
+            val bundle= bundleOf("objectId" to this.objectId)
             dataActivity.navHost.navController.navigate(R.id.action_listFragment_to_detailFragment, bundle)
         }
 
         fun setItem(data:Data){
             Log.d("app", "Data: $data")
             name.text=data.itemName
+            objectId=data.objectId
         }
 
     }
