@@ -18,13 +18,14 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: List
 
         override fun onClick(v: View) {
             dataActivity.dataViewModel.getById(itemId.text.toString())
-            Log.d("app","Item ID: "+ itemId.text.toString())
-            val bundle= bundleOf("name" to this.name.text.toString())
+            dataActivity.dataViewModel.itemId = itemId.text.toString()
+            Log.d("app","Item ID: "+ dataActivity.dataViewModel.itemId)
+            val bundle= bundleOf("name" to this.itemId.text.toString())
             dataActivity.navHost.navController.navigate(R.id.action_listFragment_to_detailFragment, bundle)
         }
 
         fun setItem(data:Data){
-            Log.d("app", "set item (Data): $data")
+            //Log.d("app", "set item (Data): $data")
             name.text=data.itemName
             itemId.text= data.objectId
 
@@ -41,7 +42,7 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: List
     }
 
     override fun getItemCount(): Int {
-        Log.d("app", "DataAdapter Size: "+ allData.size)
+        //Log.d("app", "DataAdapter Size: "+ allData.size)
         return allData.size
     }
 }

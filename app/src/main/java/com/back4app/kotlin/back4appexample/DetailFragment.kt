@@ -7,30 +7,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProviders
 
 
 class DetailFragment : Fragment() {
 
-    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
+    var dataViewModel:DataViewModel? = null
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        dataViewModel = ViewModelProviders.of(requireActivity()).get(DataViewModel::class.java)
+        dataViewModel?.item?.observe(requireActivity(), {
+            Log.d("app","Observed data: $it")
+        })
+        Log.d("app","detail itemid: "+ dataViewModel?.itemId)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataViewModel.item.observe(activity!!, {
-            Log.d("app","Observed data: $it")
-        })
-        Log.d("app","Data: "+ dataViewModel.item)
-        Log.d("app","Data: "+ dataViewModel.item.value)
-        Log.d("app","Data: "+ dataViewModel.item.value?.itemName)
+        Log.d("app","Detail bundle id: "+ savedInstanceState?.getString("name"))
+        Log.d("app","Data: "+ dataViewModel?.item)
+        Log.d("app","Data: "+ dataViewModel?.item?.value)
+        Log.d("app","Data: "+ dataViewModel?.item?.value?.itemName)
     }
 
 }

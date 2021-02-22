@@ -12,6 +12,8 @@ import java.text.ParseException
 
 class DataViewModel(): ViewModel() {
 
+    var itemId: String? = null
+
     val itemList: MutableLiveData<MutableList<Data>> by lazy {
         MutableLiveData()
     }
@@ -121,7 +123,25 @@ class DataViewModel(): ViewModel() {
         }
     }
     fun deleteById(id: String){
+//Configure Query
+        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        // Query Parameters
+        query.whereEqualTo("objectId",id);
+        // How we need retrive exactly one result we can use the getFirstInBackground method
+        query.getFirstInBackground{ parseObject,parseException ->
+            if (parseException == null) {
+                parseObject.deleteInBackground{
+                    if (it==null){
+                        Log.d("app", "Update By Id ${id}: $parseObject")
+                    }else{
+                        Log.d("app", "Fail to Update By Id ${id}: Error: "+ it.message)
+                    }
+                }
 
+            } else {
+                Log.d("app", "Get ItemById Error: "+ parseException.message.toString())
+            }
+        }
     }
 }
 

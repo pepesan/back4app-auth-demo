@@ -52,7 +52,7 @@ class ListFragment : Fragment() {
                 tvNoData.visibility = View.GONE
                 dataRecyclerView?.visibility = View.VISIBLE
                 dataAdapter = DataAdapter(allData, activity as ListActivity)
-                Log.d("app","num elem: "+ allData.size)
+                //Log.d("app","num elem: "+ allData.size)
                 dataRecyclerView?.adapter = dataAdapter
                 dataRecyclerView?.layoutManager = LinearLayoutManager(activity)
             }
