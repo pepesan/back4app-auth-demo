@@ -32,7 +32,7 @@ class DataViewModel(): ViewModel() {
 
                 for (i in objects.indices) {
                     val data: Data = Data()
-                    data.objectId= objects[i].getString("objectId")
+                    data.objectId= objects[i].objectId
                     data.itemName= objects[i].getString("itemName")
                     dataList.add(data)
                 }

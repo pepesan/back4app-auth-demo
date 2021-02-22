@@ -1,6 +1,7 @@
 package com.back4app.kotlin.back4appexample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,16 @@ class DetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dataViewModel.item.observe(activity!!, {
+            Log.d("app","Observed data: $it")
+        })
+        Log.d("app","Data: "+ dataViewModel.item)
+        Log.d("app","Data: "+ dataViewModel.item.value)
+        Log.d("app","Data: "+ dataViewModel.item.value?.itemName)
     }
 
 }
