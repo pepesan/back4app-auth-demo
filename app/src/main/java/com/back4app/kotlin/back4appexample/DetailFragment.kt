@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 
 
@@ -19,7 +20,8 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dataViewModel = ViewModelProviders.of(requireActivity()).get(DataViewModel::class.java)
+        //dataViewModel = ViewModelProviders.of(requireActivity()).get(DataViewModel::class.java)
+        dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
         dataViewModel?.item?.observe(requireActivity(), {
             Log.d("app","Observed data: $it")
         })
