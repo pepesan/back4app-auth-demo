@@ -34,9 +34,9 @@ class ListFragment : Fragment() {
     ): View? {
 
         //dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
-        dataViewModelFactory = DataViewModelFactory()
-        dataViewModel = ViewModelProvider(viewModelStore,dataViewModelFactory!!)
-                .get(DataViewModel::class.java)
+        dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
+        //dataViewModel = ViewModelProvider(viewModelStore,dataViewModelFactory!!)
+        //        .get(DataViewModel::class.java)
         val rootView= inflater.inflate(R.layout.fragment_list, container, false)
 
         var allData:MutableList<Data> = mutableListOf()
@@ -76,6 +76,7 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val fab = view.findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
+            dataViewModel?.itemId= ""
             (activity as ListActivity).navHost.navController.navigate(R.id.action_listFragment_to_addFragment)
         }
     }
