@@ -20,7 +20,7 @@ class DataAdapter(private val allData: MutableList<Data>, val dataActivity: List
             dataActivity.dataViewModel.getById(itemId.text.toString())
             dataActivity.dataViewModel.itemId = itemId.text.toString()
             Log.d("app","Item ID: "+ dataActivity.dataViewModel.itemId)
-            val bundle= bundleOf("name" to this.itemId.text.toString())
+            val bundle= bundleOf("objectId" to this.itemId.text.toString())
             dataActivity.navHost.navController.navigate(R.id.action_listFragment_to_detailFragment, bundle)
         }
 

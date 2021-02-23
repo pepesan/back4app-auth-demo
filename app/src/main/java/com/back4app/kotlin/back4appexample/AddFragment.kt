@@ -1,5 +1,6 @@
 package com.back4app.kotlin.back4appexample
 
+import android.icu.text.DateFormat
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.switchmaterial.SwitchMaterial
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,31 +21,30 @@ class AddFragment : Fragment() {
     private var itemName: EditText? = null
     private var itemAdd: EditText? = null
     private var itemDate: CalendarView? = null
-    private var isAvailable: Switch? = null
+    private var isAvailable: SwitchMaterial? = null
     private var formatterDate: Date? = null
     private var picker_button: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         activity?.setTitle("Add")
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
-        // Inflate the layout for this fragment
+        
         return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        itemName = view.findViewById(R.id.edtItem);
-        itemAdd = view.findViewById(R.id.edtAdditionalInformation);
-        itemDate = view.findViewById(R.id.calendarView);
-        isAvailable = view.findViewById(R.id.swiAvailable);
+        itemName = view.findViewById(R.id.edtItem)
+        itemAdd = view.findViewById(R.id.edtAdditionalInformation)
+        itemDate = view.findViewById(R.id.calendarView)
+        isAvailable = view.findViewById(R.id.swiAvailable)
         picker_button = view.findViewById(R.id.dpText)
         picker_button?.setOnClickListener {
             // Create the date picker builder and set the title
@@ -58,8 +59,8 @@ class AddFragment : Fragment() {
                 // Create calendar object and set the date to be that returned from selection
                 val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 calendar.time = Date(it)
-                picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
-                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+                /*picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"*/
                 formatterDate =  convertStringToData(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
                 picker_button?.text= formatterDate.toString()
             }
@@ -88,7 +89,7 @@ class AddFragment : Fragment() {
         if(item.itemId ==android.R.id.home) {
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         }
-        (activity as AppCompatActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(false);
+        (activity as AppCompatActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(false)
         return super.onOptionsItemSelected(item)
 
     }
@@ -101,7 +102,7 @@ class AddFragment : Fragment() {
         val validationErrorMessage = StringBuilder("Please, ")
         if (isEmptyText(itemName!!)) {
             validationError = true
-            validationErrorMessage.append("insert an name")
+            validationErrorMessage.append("insert a name")
         }
         if (isEmptyDate()) {
             if (validationError) {
@@ -121,7 +122,7 @@ class AddFragment : Fragment() {
     }
 
     private fun saveObject() {
-        val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
+        val data= Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
         dataViewModel.insert(data)
         (activity as ListActivity).navHost.navController.navigate(R.id.action_addFragment_to_listFragment)
     }
@@ -129,6 +130,7 @@ class AddFragment : Fragment() {
     fun convertStringToData(getDate: String?): Date? {
         var today: Date? = null
         val simpleDate = SimpleDateFormat("dd/MM/yyyy")
+        //val simpleDate=DateFormat.getDateInstance(DateFormat.YEAR_MONTH_DAY)
         try {
             today = simpleDate.parse(getDate!!)
         } catch (e: ParseException) {

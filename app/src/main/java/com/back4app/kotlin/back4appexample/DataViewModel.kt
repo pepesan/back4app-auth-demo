@@ -1,6 +1,5 @@
 package com.back4app.kotlin.back4appexample
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,28 +12,23 @@ class DataViewModel(): ViewModel() {
 
     var itemId: String? = null
 
-    val itemList: MutableLiveData<MutableList<Data>> by lazy {
-        MutableLiveData()
-    }
-    val item: MutableLiveData<Data> by lazy {
-        MutableLiveData()
-    }
+    val itemList: MutableLiveData<MutableList<Data>> by lazy { MutableLiveData() }
+    val item: MutableLiveData<Data> by lazy { MutableLiveData() }
 
     fun getAll(){
-        var dataList:MutableList<Data> = mutableListOf()
+        val dataList:MutableList<Data> = mutableListOf()
         // Configure Query
         val query = ParseQuery.getQuery<ParseObject>("reminderList")
-
         // Sorts the results in ascending order by the itemName field
         query.orderByAscending("itemName")
         query.findInBackground { objects, e ->
             if (e == null) {
                 // Adding objects into the Array
-
                 for (i in objects.indices) {
-                    val data: Data = Data()
+                    val data = Data()
                     data.objectId= objects[i].objectId
                     data.itemName= objects[i].getString("itemName")
+                    data.additionalInformation=objects[i].getString("additionalInformation")
                     dataList.add(data)
                 }
                 itemList.setValue(dataList)
@@ -73,13 +67,13 @@ class DataViewModel(): ViewModel() {
     }
     fun getById(id: String){
         //Configure Query
-        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        val query = ParseQuery.getQuery<ParseObject>("reminderList")
         // Query Parameters
-        query.whereEqualTo("objectId", id);
+        query.whereEqualTo("objectId", id)
         // How we need retrive exactly one result we can use the getFirstInBackground method
         query.getFirstInBackground{ parseObject, parseException ->
             if (parseException == null) {
-                val data: Data= Data()
+                val data= Data()
                 data.objectId = id
                 data.dateCommitment=parseObject.getDate("dateCommitment")
                 data.additionalInformation=parseObject.getString("additionalInformation")
@@ -96,9 +90,9 @@ class DataViewModel(): ViewModel() {
     }
     fun update(data: Data){
         //Configure Query
-        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        val query = ParseQuery.getQuery<ParseObject>("reminderList")
         // Query Parameters
-        query.whereEqualTo("objectId", data.objectId);
+        query.whereEqualTo("objectId", data.objectId)
         // How we need retrive exactly one result we can use the getFirstInBackground method
         query.getFirstInBackground{ parseObject, parseException ->
             if (parseException == null) {
@@ -123,9 +117,9 @@ class DataViewModel(): ViewModel() {
     }
     fun deleteById(id: String){
 //Configure Query
-        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        val query = ParseQuery.getQuery<ParseObject>("reminderList")
         // Query Parameters
-        query.whereEqualTo("objectId", id);
+        query.whereEqualTo("objectId", id)
         // How we need retrive exactly one result we can use the getFirstInBackground method
         query.getFirstInBackground{ parseObject, parseException ->
             if (parseException == null) {

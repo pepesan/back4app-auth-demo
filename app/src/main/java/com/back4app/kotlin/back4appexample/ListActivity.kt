@@ -32,7 +32,7 @@ class ListActivity : AppCompatActivity() {
 
         navHost=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         /*
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {

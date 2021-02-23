@@ -6,9 +6,12 @@ import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.switchmaterial.SwitchMaterial
+import org.w3c.dom.Text
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,39 +19,52 @@ import java.util.*
 
 class DetailFragment : Fragment() {
 
-    var dataViewModel:DataViewModel? = null
+    //var dataViewModel:DataViewModel? = null
+    var id:String=""
+    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
     private var itemName: EditText? = null
     private var itemAdd: EditText? = null
-    private var itemDate: CalendarView? = null
-    private var isAvailable: Switch? = null
+    lateinit var itemDate:EditText
+    private var isAvailable: SwitchMaterial? = null
     private var formatterDate: Date? = null
     private var picker_button: Button? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.setTitle("Detail")
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
         //dataViewModel = ViewModelProviders.of(requireActivity()).get(DataViewModel::class.java)
-        dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
-        dataViewModel?.item?.observe(requireActivity(), {
+        //dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
+        /*dataViewModel?.item?.observe(requireActivity(), {
             Log.d("app","Observed data: $it")
         })
-        Log.d("app","detail itemid: "+ dataViewModel?.itemId)
+        Log.d("app","detail itemid: "+ dataViewModel?.itemId)*/
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        itemName = view.findViewById(R.id.edtItem);
-        itemAdd = view.findViewById(R.id.edtAdditionalInformation);
-        itemDate = view.findViewById(R.id.calendarView);
-        isAvailable = view.findViewById(R.id.swiAvailable);
+        itemName = view.findViewById(R.id.edtItem)
+        itemAdd = view.findViewById(R.id.edtAdditionalInformation)
+        itemDate=view.findViewById(R.id.etDate)
+        isAvailable = view.findViewById(R.id.swiAvailable)
         picker_button = view.findViewById(R.id.dpText)
-        if (!dataViewModel?.itemId.equals("")){
+
+        id= arguments?.getString("objectId") ?:""
+        view.findViewById<TextView>(R.id.tvId).setText(String.format("ID: $id"))
+        if(id!="") dataViewModel.getById(id)
+
+        dataViewModel.item?.observe(requireActivity()){
+            itemName?.setText(it?.itemName)
+            itemAdd?.setText(it?.additionalInformation)
+            itemDate.setText(it.dateCommitment.toString())
+            formatterDate=it.dateCommitment
+            isAvailable?.isChecked= it?.isAvailable!!
+        }
+
+
+        /*if (!dataViewModel?.itemId.equals("")){
             Log.d("app","No está vacío")
             dataViewModel?.item?.observe(requireActivity()){
                 itemName?.setText(it?.itemName)
@@ -56,7 +72,7 @@ class DetailFragment : Fragment() {
                 picker_button?.setText(it.dateCommitment.toString())
                 isAvailable?.isChecked= it?.isAvailable!!
             }
-        }
+        }*/
         picker_button?.setOnClickListener {
             // Create the date picker builder and set the title
             val builder = MaterialDatePicker.Builder.datePicker()
@@ -70,16 +86,18 @@ class DetailFragment : Fragment() {
                 // Create calendar object and set the date to be that returned from selection
                 val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 calendar.time = Date(it)
-                picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
-                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
-                formatterDate =  convertStringToData(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
-                picker_button?.text= formatterDate.toString()
+                formatterDate=Date(it)
+                /*picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"*/
+                //formatterDate =  convertStringToData(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
+                //etDate.setText(formatterDate.toString())
+                itemDate.setText(String.format(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR)))
             }
-
             datePicker.show(getParentFragmentManager(), "MyTAG")
         }
     }
-    fun convertStringToData(getDate: String?): Date? {
+
+    /*fun convertStringToData(getDate: String?): Date? {
         var today: Date? = null
         val simpleDate = SimpleDateFormat("dd/MM/yyyy")
         try {
@@ -88,7 +106,8 @@ class DetailFragment : Fragment() {
             e.printStackTrace()
         }
         return today
-    }
+    }*/
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.detail_menu, menu)
@@ -104,7 +123,7 @@ class DetailFragment : Fragment() {
         if(item.itemId ==android.R.id.home) {
             findNavController().navigate(R.id.action_detailFragment_to_listFragment)
         }
-        (activity as AppCompatActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(false);
+        (activity as AppCompatActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(false)
         return super.onOptionsItemSelected(item)
 
     }
@@ -151,13 +170,13 @@ class DetailFragment : Fragment() {
         }
     }
     private fun saveObject() {
-        val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
-        dataViewModel?.update(data)
+        val data = Data(id, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
+        dataViewModel.update(data)
         (activity as ListActivity).navHost.navController.navigate(R.id.action_detailFragment_to_listFragment)
     }
 
     private fun delete() {
-        dataViewModel?.deleteById(dataViewModel?.itemId!!)
+        dataViewModel.deleteById(id)
         (activity as ListActivity).navHost.navController.navigate(R.id.action_detailFragment_to_listFragment)
     }
 }

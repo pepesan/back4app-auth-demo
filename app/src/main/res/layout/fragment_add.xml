@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,18 +11,26 @@
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     tools:context=".CreateObject">
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reminder_date"
+        android:layout_marginTop="15dp"/>
+
     <Button
         android:id="@+id/dpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick a Date"
+        android:text="@string/pick_a_date"
         android:layout_marginTop="15dp"
         />
     <TextView
         android:id="@+id/txtItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Item ToDo"
+        android:text="@string/item_todo"
         android:layout_marginTop="15dp"/>
 
     <EditText
@@ -38,7 +45,7 @@
         android:id="@+id/txtAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Additional Information"
+        android:text="@string/additional_information"
         android:layout_marginTop="15dp"/>
 
     <EditText
@@ -49,27 +56,11 @@
         android:maxLines="3"
         android:singleLine="true" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/swiAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Is it available?"
+        android:text="@string/is_it_available"
         android:layout_marginTop="15dp"/>
-
-    <TextView
-        android:id="@+id/txtDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reminder Date"
-        android:layout_marginTop="15dp"/>
-
-
-
-    <!--Button
-        android:id="@+id/btnCreate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
-        android:text="Create Item" /-->
 
 </LinearLayout>
