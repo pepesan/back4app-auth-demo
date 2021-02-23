@@ -1,97 +1,84 @@
 package com.back4app.kotlin.back4appexample
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.*
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.switchmaterial.SwitchMaterial
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.microedition.khronos.egl.EGLDisplay
 
 
 class DetailFragment : Fragment() {
 
-    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
-    lateinit var etId:TextView
-    lateinit var etDate:EditText
-    lateinit var etItem:EditText
-    lateinit var etAditionalInformation:EditText
-    lateinit var sIsAvailable:SwitchMaterial
-    lateinit var picker_button:Button
-    lateinit var data:Data
+    var dataViewModel:DataViewModel? = null
+    private var itemName: EditText? = null
+    private var itemAdd: EditText? = null
+    private var itemDate: CalendarView? = null
+    private var isAvailable: Switch? = null
+    private var formatterDate: Date? = null
+    private var picker_button: Button? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         activity?.setTitle("Detail")
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true)
+        //dataViewModel = ViewModelProviders.of(requireActivity()).get(DataViewModel::class.java)
+        dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
+        dataViewModel?.item?.observe(requireActivity(), {
+            Log.d("app","Observed data: $it")
+        })
+        Log.d("app","detail itemid: "+ dataViewModel?.itemId)
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        etId = view.findViewById(R.id.tvId)
-        etDate = view.findViewById(R.id.etDate)
-        etItem = view.findViewById(R.id.edtItem)
-        etAditionalInformation = view.findViewById(R.id.edtAdditionalInformation)
-        sIsAvailable = view.findViewById(R.id.swiAvailable)
+        itemName = view.findViewById(R.id.edtItem);
+        itemAdd = view.findViewById(R.id.edtAdditionalInformation);
+        itemDate = view.findViewById(R.id.calendarView);
+        isAvailable = view.findViewById(R.id.swiAvailable);
         picker_button = view.findViewById(R.id.dpText)
-
+        if (!dataViewModel?.itemId.equals("")){
+            Log.d("app","No está vacío")
+            dataViewModel?.item?.observe(requireActivity()){
+                itemName?.setText(it?.itemName)
+                itemAdd?.setText(it?.additionalInformation)
+                picker_button?.setText(it.dateCommitment.toString())
+                isAvailable?.isChecked= it?.isAvailable!!
+            }
+        }
         picker_button?.setOnClickListener {
             // Create the date picker builder and set the title
             val builder = MaterialDatePicker.Builder.datePicker()
+
             // create the date picker
             val datePicker = builder.build()
+
             // set listener when date is selected
             datePicker.addOnPositiveButtonClickListener {
+
                 // Create calendar object and set the date to be that returned from selection
                 val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                 calendar.time = Date(it)
-                etDate.setText("${calendar.get(Calendar.DAY_OF_MONTH)}/ " +
-                        "${calendar.get(Calendar.MONTH) + 1}/${calendar.get(Calendar.YEAR)}")
+                picker_button?.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+                        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+                formatterDate =  convertStringToData(calendar.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
+                picker_button?.text= formatterDate.toString()
             }
+
             datePicker.show(getParentFragmentManager(), "MyTAG")
-
-            val posicion: String? = arguments?.getString("objectId")
-            if (posicion != null) {
-                dataViewModel.getById(posicion)
-                dataViewModel.item.observe(requireActivity()) {
-                    data = Data(it.objectId, it.itemName, it.additionalInformation, it.dateCommitment, it.isAvailable)
-                    etId.setText(String.format("ID: ${data.objectId}"))
-                    etDate.setText(data.dateCommitment.toString())
-                    etItem.setText(data.itemName)
-                    etAditionalInformation.setText(data.additionalInformation)
-                    data.isAvailable?.let { sIsAvailable.isChecked = it }
-                }
-            }
-
-            view.findViewById<Button>(R.id.btnUpdate).setOnClickListener {
-                if (etDate.text.toString() == data.dateCommitment.toString() &&
-                        etItem.text.toString() == data.itemName &&
-                        etAditionalInformation.text.toString() == data.additionalInformation &&
-                        sIsAvailable.isChecked == data.isAvailable) Toast.makeText(activity, "Tienes que modificar algún dato", Toast.LENGTH_SHORT).show()
-                else {
-                    data.itemName = etItem.text.toString()
-                    data.additionalInformation = etAditionalInformation.text.toString()
-                    data.dateCommitment = convertStringToData(etDate.text.toString())
-                    data.isAvailable = sIsAvailable.isChecked
-                    dataViewModel.update(data)
-
-                }
-            }
-
         }
     }
-
     fun convertStringToData(getDate: String?): Date? {
         var today: Date? = null
         val simpleDate = SimpleDateFormat("dd/MM/yyyy")
@@ -101,5 +88,76 @@ class DetailFragment : Fragment() {
             e.printStackTrace()
         }
         return today
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.detail_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_delete){
+            delete()
+        }
+        if(item.itemId == R.id.action_edit){
+            save()
+        }
+        if(item.itemId ==android.R.id.home) {
+            findNavController().navigate(R.id.action_detailFragment_to_listFragment)
+        }
+        (activity as AppCompatActivity).getSupportActionBar()?.setDisplayHomeAsUpEnabled(false);
+        return super.onOptionsItemSelected(item)
+
+    }
+
+    private fun save() {
+            //Validating the log in data
+            var validationError = false
+
+            val validationErrorMessage = StringBuilder("Please, ")
+            if (isEmptyText(itemName!!)) {
+                validationError = true
+                validationErrorMessage.append("insert an name")
+            }
+            if (isEmptyDate()) {
+                if (validationError) {
+                    validationErrorMessage.append(" and ")
+                }
+                validationError = true
+                validationErrorMessage.append("select a Date")
+            }
+            validationErrorMessage.append(".")
+            if (validationError) {
+                Toast.makeText(requireContext(), validationErrorMessage.toString(), Toast.LENGTH_LONG)
+                    .show()
+                return
+            } else {
+                saveObject()
+            }
+
+    }
+    private fun isEmptyText(text: EditText): Boolean {
+        return if (text.text.toString().trim { it <= ' ' }.length > 0) {
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun isEmptyDate(): Boolean {
+        return if (formatterDate.toString() !== "null") {
+            false
+        } else {
+            true
+        }
+    }
+    private fun saveObject() {
+        val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
+        dataViewModel?.update(data)
+        (activity as ListActivity).navHost.navController.navigate(R.id.action_detailFragment_to_listFragment)
+    }
+
+    private fun delete() {
+        dataViewModel?.deleteById(dataViewModel?.itemId!!)
+        (activity as ListActivity).navHost.navController.navigate(R.id.action_detailFragment_to_listFragment)
     }
 }

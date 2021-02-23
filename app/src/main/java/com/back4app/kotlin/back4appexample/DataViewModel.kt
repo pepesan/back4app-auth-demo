@@ -1,16 +1,17 @@
 package com.back4app.kotlin.back4appexample
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.parse.GetCallback
 import com.parse.ParseObject
 import com.parse.ParseQuery
-import java.text.ParseException
 
 
 class DataViewModel(): ViewModel() {
+
+    var itemId: String? = null
 
     val itemList: MutableLiveData<MutableList<Data>> by lazy {
         MutableLiveData()
@@ -32,7 +33,7 @@ class DataViewModel(): ViewModel() {
 
                 for (i in objects.indices) {
                     val data: Data = Data()
-                    data.objectId= objects[i].getString("objectId")
+                    data.objectId= objects[i].objectId
                     data.itemName= objects[i].getString("itemName")
                     dataList.add(data)
                 }
@@ -76,7 +77,7 @@ class DataViewModel(): ViewModel() {
         // Query Parameters
         query.whereEqualTo("objectId", id);
         // How we need retrive exactly one result we can use the getFirstInBackground method
-        query.getFirstInBackground{ parseObject,parseException ->
+        query.getFirstInBackground{ parseObject, parseException ->
             if (parseException == null) {
                 val data: Data= Data()
                 data.objectId = id
@@ -89,7 +90,7 @@ class DataViewModel(): ViewModel() {
                 item.setValue(data)
                 Log.d("app", "GetByID $id: $data")
             } else {
-                Log.d("app", "Get ItemById Error: "+ parseException.message.toString())
+                Log.d("app", "Get ItemById Error: " + parseException.message.toString())
             }
         }
     }
@@ -99,38 +100,56 @@ class DataViewModel(): ViewModel() {
         // Query Parameters
         query.whereEqualTo("objectId", data.objectId);
         // How we need retrive exactly one result we can use the getFirstInBackground method
-        query.getFirstInBackground{ parseObject,parseException ->
+        query.getFirstInBackground{ parseObject, parseException ->
             if (parseException == null) {
 
-                parseObject.put("dateCommitment",data.dateCommitment!!)
-                parseObject.put("additionalInformation",data.additionalInformation!!)
-                parseObject.put("isAvailable",data.isAvailable!!)
-                parseObject.put("itemName",data.itemName!!)
+                parseObject.put("dateCommitment", data.dateCommitment!!)
+                parseObject.put("additionalInformation", data.additionalInformation!!)
+                parseObject.put("isAvailable", data.isAvailable!!)
+                parseObject.put("itemName", data.itemName!!)
                 parseObject.saveInBackground{
                     if (it==null){
                         item.setValue(data)
                         Log.d("app", "Update By Id ${data.objectId}: $data")
                     }else{
-                        Log.d("app", "Fail to Update By Id ${data.objectId}: Error: "+ it.message)
+                        Log.d("app", "Fail to Update By Id ${data.objectId}: Error: " + it.message)
                     }
                 }
 
             } else {
-                Log.d("app", "Get ItemById Error: "+ parseException.message.toString())
+                Log.d("app", "Get ItemById Error: " + parseException.message.toString())
             }
         }
     }
     fun deleteById(id: String){
+//Configure Query
+        val query = ParseQuery.getQuery<ParseObject>("reminderList");
+        // Query Parameters
+        query.whereEqualTo("objectId", id);
+        // How we need retrive exactly one result we can use the getFirstInBackground method
+        query.getFirstInBackground{ parseObject, parseException ->
+            if (parseException == null) {
+                parseObject.deleteInBackground{
+                    if (it==null){
+                        Log.d("app", "Update By Id ${id}: $parseObject")
+                    }else{
+                        Log.d("app", "Fail to Update By Id ${id}: Error: " + it.message)
+                    }
+                }
 
+            } else {
+                Log.d("app", "Get ItemById Error: " + parseException.message.toString())
+            }
+        }
     }
 }
 
-class DataViewModelFactory() : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+class DataViewModelFactory() :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DataViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return DataViewModel() as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 }

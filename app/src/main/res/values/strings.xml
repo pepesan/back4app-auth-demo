@@ -8,12 +8,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_hay_datos">No hay datos</string>
-    <string name="update_item">Update Item</string>
-    <string name="reminder_date">Reminder Date</string>
-    <string name="delete_item">Delete Item</string>
-    <string name="additional_information">Additional Information</string>
-    <string name="item_todo">Item ToDo</string>
-    <string name="pick_a_date">Pick a Date</string>
-    <string name="is_it_available">Is it available?</string>
+    <string name="saved_high_score_key" />
 
 </resources>

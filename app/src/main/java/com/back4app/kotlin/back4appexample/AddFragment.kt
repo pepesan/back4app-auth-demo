@@ -1,18 +1,13 @@
 package com.back4app.kotlin.back4appexample
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
-import android.widget.CalendarView.OnDateChangeListener
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.parse.ParseObject
-import com.parse.ParseUser
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -87,7 +82,7 @@ class AddFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_add){
+        if(item.itemId == R.id.action_edit){
             save()
         }
         if(item.itemId ==android.R.id.home) {
