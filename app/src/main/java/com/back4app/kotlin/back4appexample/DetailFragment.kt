@@ -19,7 +19,6 @@ class DetailFragment : Fragment() {
     var dataViewModel:DataViewModel? = null
     private var itemName: EditText? = null
     private var itemAdd: EditText? = null
-    private var itemDate: CalendarView? = null
     private var isAvailable: Switch? = null
     private var formatterDate: Date? = null
     private var picker_button: Button? = null
@@ -45,7 +44,6 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         itemName = view.findViewById(R.id.edtItem);
         itemAdd = view.findViewById(R.id.edtAdditionalInformation);
-        itemDate = view.findViewById(R.id.calendarView);
         isAvailable = view.findViewById(R.id.swiAvailable);
         picker_button = view.findViewById(R.id.dpText)
         if (!dataViewModel?.itemId.equals("")){
@@ -55,6 +53,8 @@ class DetailFragment : Fragment() {
                 itemAdd?.setText(it?.additionalInformation)
                 picker_button?.setText(it.dateCommitment.toString())
                 isAvailable?.isChecked= it?.isAvailable!!
+                formatterDate=it?.dateCommitment
+                //formatterDate =  convertStringToData(it.dateCommitment.get(Calendar.DAY_OF_MONTH).toString() + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR))
             }
         }
         picker_button?.setOnClickListener {
@@ -151,7 +151,7 @@ class DetailFragment : Fragment() {
         }
     }
     private fun saveObject() {
-        val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
+        val data: Data = Data(dataViewModel?.itemId, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
         dataViewModel?.update(data)
         (activity as ListActivity).navHost.navController.navigate(R.id.action_detailFragment_to_listFragment)
     }

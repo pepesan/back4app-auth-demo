@@ -38,9 +38,9 @@ class DataViewModel(): ViewModel() {
                     dataList.add(data)
                 }
                 itemList.setValue(dataList)
+                Log.d("app", "GetAll: " + dataList)
             }
         }
-        Log.d("app", "dataList: " + dataList)
     }
 
     fun insert(data: Data){
@@ -63,6 +63,7 @@ class DataViewModel(): ViewModel() {
                 Log.d("app", "reminderList: ${newItem.objectId}")
                 data.objectId= newItem.objectId
                 item.setValue(data)
+                getAll()
                 //getById(data.objectId!!)
             } else {
                 Log.d("app", it.message.toString())
@@ -111,6 +112,7 @@ class DataViewModel(): ViewModel() {
                     if (it==null){
                         item.setValue(data)
                         Log.d("app", "Update By Id ${data.objectId}: $data")
+                        getAll()
                     }else{
                         Log.d("app", "Fail to Update By Id ${data.objectId}: Error: " + it.message)
                     }
@@ -131,9 +133,10 @@ class DataViewModel(): ViewModel() {
             if (parseException == null) {
                 parseObject.deleteInBackground{
                     if (it==null){
-                        Log.d("app", "Update By Id ${id}: $parseObject")
+                        Log.d("app", "Delete By Id ${id}: $parseObject")
+                        getAll()
                     }else{
-                        Log.d("app", "Fail to Update By Id ${id}: Error: " + it.message)
+                        Log.d("app", "Fail to Delete By Id ${id}: Error: " + it.message)
                     }
                 }
 

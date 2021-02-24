@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "184279246803",
+    "project_id": "back4appproject",
+    "storage_bucket": "back4appproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184279246803:android:9a5c1f0b15ee2336383126",
+        "android_client_info": {
+          "package_name": "com.back4app.kotlin.back4appexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184279246803-rp32dpbpfmo6e4c70elsplv4h8pq3fjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-xmUmWGiJYA_Fgb74UpRjw9qBOz0d8h8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184279246803-rp32dpbpfmo6e4c70elsplv4h8pq3fjr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

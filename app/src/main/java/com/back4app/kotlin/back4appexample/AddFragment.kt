@@ -5,7 +5,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.ParseException
@@ -14,7 +14,7 @@ import java.util.*
 
 
 class AddFragment : Fragment() {
-    val dataViewModel:DataViewModel by viewModels {DataViewModelFactory()}
+    var dataViewModel:DataViewModel? = null
 
     private var itemName: EditText? = null
     private var itemAdd: EditText? = null
@@ -34,6 +34,7 @@ class AddFragment : Fragment() {
         activity?.setTitle("Add")
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true)
+        dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add, container, false)
     }
@@ -122,7 +123,7 @@ class AddFragment : Fragment() {
 
     private fun saveObject() {
         val data: Data = Data(null, itemName!!.text.toString(), itemAdd!!.text.toString(), formatterDate!!, isAvailable!!.isChecked)
-        dataViewModel.insert(data)
+        dataViewModel?.insert(data)
         (activity as ListActivity).navHost.navController.navigate(R.id.action_addFragment_to_listFragment)
     }
 

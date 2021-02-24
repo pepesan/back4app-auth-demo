@@ -35,8 +35,6 @@ class ListFragment : Fragment() {
 
         //dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
         dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
-        //dataViewModel = ViewModelProvider(viewModelStore,dataViewModelFactory!!)
-        //        .get(DataViewModel::class.java)
         val rootView= inflater.inflate(R.layout.fragment_list, container, false)
 
         var allData:MutableList<Data> = mutableListOf()
@@ -67,10 +65,6 @@ class ListFragment : Fragment() {
         return rootView
     }
 
-    override fun onResume() {
-        super.onResume()
-        dataViewModel?.getAll()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
