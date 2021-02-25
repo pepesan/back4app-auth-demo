@@ -124,7 +124,7 @@ class DataViewModel(): ViewModel() {
         }
     }
     fun deleteById(id: String){
-//Configure Query
+        //Configure Query
         val query = ParseQuery.getQuery<ParseObject>("reminderList");
         // Query Parameters
         query.whereEqualTo("objectId", id);
