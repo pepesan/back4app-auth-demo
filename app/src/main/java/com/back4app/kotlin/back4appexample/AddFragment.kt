@@ -35,7 +35,7 @@ class AddFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true)
         dataViewModel = ViewModelProvider(requireActivity()).get(DataViewModel::class.java)
-        // Inflate the layout for this fragment
+        // Inflate the  layout for this fragment
         return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
